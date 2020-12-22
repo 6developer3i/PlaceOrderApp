@@ -1,0 +1,8 @@
+database storage in PlaceOrderApp
+
+	1. form structure save in database
+
+	2. public app table
+		store id 
+		code
+	

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/my2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/my.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css.map' %}"> -->s
+{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+
+{% endblock css %}
+{% block content %}
+{#    <div class="ctm_data"></div>#}
+{#    <form id="myForm" enctype="multipart/form-data">#}
+{#        {% csrf_token %}#}
+{#    </form>#}
+{#    <button id="getJSON">data <span class="fa fa-arrow-right"></span></button>#}
+
+    <!-- <div class="setDataWrap" style="margin-top: 30px;">
+        <button id="getJSON" type="button">Get JSON Data</button>
+    </div> -->
+    <div id="build-wrap" style="margin-top: 20px"></div>
+{#    <form id="my-form">#}
+{#        <div id="form-render-wrap"></div>#}
+{#        <button type="submit">Save</button>#}
+{#    </form>#}
+
+{#    <div style="margin-top: 50px">#}
+{#        <div class="render-wrap"></div>#}
+{#        <button id="edit-form">Edit Form</button>#}
+{#    </div>#}
+
+    
+{% endblock content %}
+{% block script %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/form-builder.min.js' %}"></script>
+    <script src="{% static 'js/form-render.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+        jQuery(function ($) {
+          let fbTemplate = document.getElementById("build-wrap");
+          let options = {
+            onSave: function (evt, formData) {
+                let url = "/update";
+                $.ajax({
+                    method: "POST",
+                    url: url,
+                    data: {data:formData,shop:'{{shop}}',form:'{{formid}}'},
+                    success: function(result){
+                        let x = result
+                        console.log(result, x);
+                        console.log("formbuilder Pragnesh saved");
+                        toggleEdit(false);
+                        $(".render-wrap").formRender({ result });
+                    },
+                    dataType: 'json'
+                });
+            }
+          };
+          $(fbTemplate).formBuilder(options);
+        });
+
+        /**
+         * Toggles the edit mode for the demo
+         * @return {Boolean} editMode
+         */
+        function toggleEdit(editing) {
+          document.body.classList.toggle("form-rendered", !editing);
+        }
+
+        document.getElementById("edit-form").onclick = function () {
+          toggleEdit(true);
+        };
+    </script>
+{#    <script type="text/javascript" src="{% static 'js/my2.js' %}"></script>#}
+    <script type="text/javascript">
+        jQuery(function($) {
+            let fbEditor = document.getElementById('render-wrap');
+            let formBuilder = $(fbEditor).formBuilder();
+
+
+            document.getElementById('getJSON').addEventListener('click', function() {
+                let datashow = (formBuilder.actions.getData('json', true))
+                // insert query here
+
+
+                // show data in div tag
+                $('.ctm_data').html(datashow);
+                 {#$("#mydatatext").val(datashow);#}
+                console.log(datashow)
+            });
+        });
+    </script>
+
+    <!-- <script type="text/javascript">
+        jQuery(function($) {
+            var fbEditor = document.getElementById('render-wrap');
+            var formBuilder = $(fbEditor).formBuilder();
+
+    
+            document.getElementById('getJSON').addEventListener('click', function() {
+                let datashow = (formBuilder.actions.getData('json', true));
+                // console.log(datashow)
+                var url = "http://8de16a0c344b.ngrok.io/data"
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: datashow,
+                    success: function(result){
+                        console.log(result);
+                    },
+                    dataType: dataType
+                });
+            });
+        });
+    </script> -->
+
+{% endblock script %}
